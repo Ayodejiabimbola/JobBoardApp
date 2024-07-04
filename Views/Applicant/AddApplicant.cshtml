@@ -27,21 +27,22 @@
 
     <div class="form-group">
         <label asp-for="DOB">Date of Birth:</label>
-        <input asp-for="DOB" type="date" class="form-control" />
+        <input asp-for="DOB" type="date" class="form-control" value="@DateTime.Now.ToString("dd-MM-yyyy")">
         <span asp-validation-for="DOB" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
         <label asp-for="Gender" class="form-label"></label>
         <select asp-for="Gender" class="form-control">
-            <option value="" selected hidden disabled>Select Gender</option>
+            <option value="">Select State</option>  
             @foreach (var gender in Enum.GetValues(typeof(JobBoard.Data.Enum.Gender)))
             {
-                <option value="@gender">@gender</option>
+                <option value="@gender">@gender</option> 
             }
         </select>
         <span asp-validation-for="Gender" class="text-danger"></span>
     </div>
+
 
     <div class="mb-3">
         <label asp-for="StateId" class="form-label"></label>

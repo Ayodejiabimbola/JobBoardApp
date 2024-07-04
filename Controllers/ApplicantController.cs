@@ -31,7 +31,7 @@ public class ApplicantController(
         return View(applicants);
     }
 
-    public async Task<IActionResult> ApplicantDetails(int id)
+    public async Task<IActionResult> ApplicantDetail(int id)
     {
         var user = await _userManager.GetUserAsync(User);
 
@@ -57,54 +57,6 @@ public class ApplicantController(
             return RedirectToAction("ApplicantDetail", "Applicant");
         }
     }
-    // public async Task<IActionResult> AddApplicantAsync()
-    // {
-    //     ViewData["Genders"] = Enum.GetValues(typeof(Gender)).Cast<Gender>().ToList();
-    //     ViewData["States"] = await _jobBoardDbContext.States.Select(s => new { Id = s.Id, Name = s.Name }).ToListAsync();
-    //     return View();
-    // }
-
-    // [HttpPost]
-    // public async Task<IActionResult> AddApplicant(Applicant applicant, IFormFile cvFile, IFormFile coverLetterFile)
-    // {
-    //     if (ModelState.IsValid)
-    //     {
-    //         _jobBoardDbContext.Add(applicant);
-    //         await _jobBoardDbContext.SaveChangesAsync();
-    //         return RedirectToAction(nameof(Index));
-    //     }
-    //     if (ModelState.IsValid)
-    // {
-    //     if (cvFile != null && cvFile.Length > 0)
-    //     {
-    //         string cvPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", cvFile.FileName);
-    //         using (var stream = new FileStream(cvPath, FileMode.Create))
-    //         {
-    //             await cvFile.CopyToAsync(stream);
-    //         }
-    //         applicant.CVPath = cvPath;
-    //     }
-
-    //     if (coverLetterFile != null && coverLetterFile.Length > 0)
-    //     {
-    //         string coverLetterPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", coverLetterFile.FileName);
-    //         using (var stream = new FileStream(coverLetterPath, FileMode.Create))
-    //         {
-    //             await coverLetterFile.CopyToAsync(stream);
-    //         }
-    //         applicant.CoverLetterPath = coverLetterPath;
-    //     }
-
-    //     _jobBoardDbContext.Add(applicant);
-    //     await _jobBoardDbContext.SaveChangesAsync();
-    //     return RedirectToAction(nameof(Index));
-    // }
-
-    // ViewData["States"] = await _jobBoardDbContext.States.Select(s => new { Id = s.Id, Name = s.Name }).ToListAsync();
-    // ViewData["Genders"] = Enum.GetValues(typeof(Gender)).Cast<Gender>().ToList();
-    // return View(applicant);
-    // }
-
     public IActionResult AddApplicant()
     {
         var states = _jobBoardDbContext.States.Select(x => new SelectListItem
@@ -123,7 +75,7 @@ public class ApplicantController(
 
 
     [HttpPost]
-    public async Task<IActionResult> ApplicantDetail(AddApplicantViewModel model)
+    public async Task<IActionResult> AddApplicant(AddApplicantViewModel model)
     {
         var applicantExist = await _jobBoardDbContext.Applicants.AnyAsync(x => x.FullName == model.FullName || x.Email == model.Email);
         var userDetail = await Helper.GetCurrentUserIdAsync(_httpContextAccessor, _userManager);
@@ -181,6 +133,141 @@ public class ApplicantController(
         }
 
         _notyfService.Error("An error occurred during application");
+        return View(model);
+    }
+
+    // public async Task<IActionResult> EditApplicantDetailAsync()
+    // {
+    //     var user = await _userManager.GetUserAsync(User);
+    //     if (user == null)
+    //     {
+    //         return NotFound();
+    //     }
+
+    //     var applicant = await _jobBoardDbContext.Applicants
+    //         .FirstOrDefaultAsync(a => a.UserId == user.Id);
+    //     if (applicant == null)
+    //     {
+    //         return NotFound(); 
+    //     }
+
+    //     var states = _jobBoardDbContext.States.Select(x => new SelectListItem
+    //     {
+    //         Text = x.Name,
+    //         Value = x.Id.ToString()
+    //     }).ToList();
+
+    //     var applicantDetailViewModel = new ApplicantDetailViewModel
+    //     {
+    //         FullName = applicant.FullName,
+    //         Email = applicant.Email,
+    //         PhoneNumber = applicant.PhoneNumber,
+    //         Gender = applicant.Gender,
+    //         States = states,
+    //         StateId = applicant.StateId
+    //     };
+
+    //     return View(applicantDetailViewModel);
+    // }
+
+    // [HttpPost]
+    // public async Task<IActionResult> EditApplicantDetail(ApplicantDetailViewModel model)
+    // {
+    //     if (ModelState.IsValid)
+    //     {
+    //         var user = await _userManager.GetUserAsync(User);
+    //         if (user == null)
+    //         {
+    //             return NotFound();
+    //         }
+
+    //         var applicant = await _jobBoardDbContext.Applicants
+    //             .FirstOrDefaultAsync(a => a.UserId == user.Id);
+    //         if (applicant == null)
+    //         {
+    //             return NotFound();
+    //         }
+
+    //         applicant.FullName = model.FullName;
+    //         applicant.Email = model.Email;
+    //         applicant.PhoneNumber = model.PhoneNumber;
+    //         applicant.Gender = model.Gender;
+    //         applicant.StateId = model.StateId;
+
+    //         _jobBoardDbContext.Update(applicant);
+    //         await _jobBoardDbContext.SaveChangesAsync();
+
+    //         _notyfService.Success("Applicant details updated successfully");
+    //         return RedirectToAction("ViewApplicantDetail", "Applicant");
+    //     }
+
+    //     _notyfService.Error("An error occurred while updating details");
+    //     return View(model);
+    // }
+    private async Task<Applicant?> GetCurrentApplicant()
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+        {
+            return null;
+        }
+
+        return await _jobBoardDbContext.Applicants
+            .FirstOrDefaultAsync(a => a.UserId == user.Id);
+    }
+
+    public async Task<IActionResult> EditApplicantDetailAsync()
+    {
+        var applicant = await GetCurrentApplicant();
+        if (applicant == null)
+        {
+            return NotFound();
+        }
+
+        var states = _jobBoardDbContext.States.Select(x => new SelectListItem
+        {
+            Text = x.Name,
+            Value = x.Id.ToString()
+        }).ToList();
+
+        var applicantDetailViewModel = new ApplicantDetailViewModel
+        {
+            FullName = applicant.FullName,
+            Email = applicant.Email,
+            PhoneNumber = applicant.PhoneNumber,
+            Gender = applicant.Gender,
+            States = states,
+            StateId = applicant.StateId
+        };
+
+        return View(applicantDetailViewModel);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> EditApplicantDetail(ApplicantDetailViewModel model)
+    {
+        if (ModelState.IsValid)
+        {
+            var applicant = await GetCurrentApplicant();
+            if (applicant == null)
+            {
+                return NotFound();
+            }
+
+            applicant.FullName = model.FullName;
+            applicant.Email = model.Email;
+            applicant.PhoneNumber = model.PhoneNumber;
+            applicant.Gender = model.Gender;
+            applicant.StateId = model.StateId;
+
+            _jobBoardDbContext.Update(applicant);
+            await _jobBoardDbContext.SaveChangesAsync();
+
+            _notyfService.Success("Applicant details updated successfully");
+            return RedirectToAction("ViewApplicantDetail", "Applicant");
+        }
+
+        _notyfService.Error("An error occurred while updating details");
         return View(model);
     }
 }

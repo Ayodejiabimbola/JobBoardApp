@@ -1,0 +1,44 @@
+@model JobBoard.Models.Applicant.ApplicantDetailViewModel
+
+@{
+    ViewData["Title"] = "Edit Details";
+}
+
+<h2>@ViewData["Title"]</h2>
+<hr />
+
+<form asp-controller="Applicant" asp-action="EditApplicantDetail" method="post">
+
+    <div class="mb-3">
+        <label asp-for="FullName" class="form-label"></label>
+        <input type="text" class="form-control" asp-for="FullName">
+        <span asp-validation-for="FullName" class="text-danger"></span>
+    </div>
+
+
+    <div class="mb-3">
+        <label asp-for="Email" class="form-label"></label>
+        <input type="email" class="form-control" asp-for="Email">
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="PhoneNumber" class="form-label"></label>
+        <input type="text" class="form-control" asp-for="PhoneNumber">
+        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Gender" class="form-label"></label>
+        <select asp-for="Gender" class="form-control">
+            <option value="" selected hidden disabled>Select Gender</option>
+            @foreach (var gender in Enum.GetValues(typeof(JobBoard.Data.Enum.Gender)))
+            {
+                <option value="@gender">@gender</option>
+            }
+        </select>
+        <span asp-validation-for="Gender" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success">Update</button>
+</form>
