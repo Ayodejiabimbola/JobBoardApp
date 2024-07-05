@@ -64,10 +64,16 @@ public class ApplicantController(
             Text = x.Name,
             Value = x.Id.ToString()
         }).ToList();
+        var jobs = _jobBoardDbContext.Jobs.Select(x => new SelectListItem
+        {
+            Text = x.JobName,
+            Value = x.Id.ToString()
+        }).ToList();
 
         var viewModel = new AddApplicantViewModel()
         {
             States = states,
+            Jobs = jobs
         };
 
         return View(viewModel);
@@ -92,7 +98,8 @@ public class ApplicantController(
             FullName = model.FullName,
             Email = model.Email,
             PhoneNumber = model.PhoneNumber,
-            StateId = model.StateId
+            StateId = model.StateId,
+            JobId = model.JobId
         };
 
         if (model.CV != null && model.CV.Length > 0)
@@ -135,75 +142,6 @@ public class ApplicantController(
         _notyfService.Error("An error occurred during application");
         return View(model);
     }
-
-    // public async Task<IActionResult> EditApplicantDetailAsync()
-    // {
-    //     var user = await _userManager.GetUserAsync(User);
-    //     if (user == null)
-    //     {
-    //         return NotFound();
-    //     }
-
-    //     var applicant = await _jobBoardDbContext.Applicants
-    //         .FirstOrDefaultAsync(a => a.UserId == user.Id);
-    //     if (applicant == null)
-    //     {
-    //         return NotFound(); 
-    //     }
-
-    //     var states = _jobBoardDbContext.States.Select(x => new SelectListItem
-    //     {
-    //         Text = x.Name,
-    //         Value = x.Id.ToString()
-    //     }).ToList();
-
-    //     var applicantDetailViewModel = new ApplicantDetailViewModel
-    //     {
-    //         FullName = applicant.FullName,
-    //         Email = applicant.Email,
-    //         PhoneNumber = applicant.PhoneNumber,
-    //         Gender = applicant.Gender,
-    //         States = states,
-    //         StateId = applicant.StateId
-    //     };
-
-    //     return View(applicantDetailViewModel);
-    // }
-
-    // [HttpPost]
-    // public async Task<IActionResult> EditApplicantDetail(ApplicantDetailViewModel model)
-    // {
-    //     if (ModelState.IsValid)
-    //     {
-    //         var user = await _userManager.GetUserAsync(User);
-    //         if (user == null)
-    //         {
-    //             return NotFound();
-    //         }
-
-    //         var applicant = await _jobBoardDbContext.Applicants
-    //             .FirstOrDefaultAsync(a => a.UserId == user.Id);
-    //         if (applicant == null)
-    //         {
-    //             return NotFound();
-    //         }
-
-    //         applicant.FullName = model.FullName;
-    //         applicant.Email = model.Email;
-    //         applicant.PhoneNumber = model.PhoneNumber;
-    //         applicant.Gender = model.Gender;
-    //         applicant.StateId = model.StateId;
-
-    //         _jobBoardDbContext.Update(applicant);
-    //         await _jobBoardDbContext.SaveChangesAsync();
-
-    //         _notyfService.Success("Applicant details updated successfully");
-    //         return RedirectToAction("ViewApplicantDetail", "Applicant");
-    //     }
-
-    //     _notyfService.Error("An error occurred while updating details");
-    //     return View(model);
-    // }
     private async Task<Applicant?> GetCurrentApplicant()
     {
         var user = await _userManager.GetUserAsync(User);
@@ -237,7 +175,8 @@ public class ApplicantController(
             PhoneNumber = applicant.PhoneNumber,
             Gender = applicant.Gender,
             States = states,
-            StateId = applicant.StateId
+            StateId = applicant.StateId,
+            JobId = applicant.JobId
         };
 
         return View(applicantDetailViewModel);
@@ -269,5 +208,55 @@ public class ApplicantController(
 
         _notyfService.Error("An error occurred while updating details");
         return View(model);
+    }
+    public async Task<IActionResult> DeleteApplicantDetail(int id)
+    {
+        var applicant = await _jobBoardDbContext.Applicants.FindAsync(id);
+        if (applicant == null)
+        {
+            return NotFound();
+        }
+
+        return View(applicant);
+    }
+    [HttpPost, ActionName("Delete")]
+    public async Task<IActionResult> DeleteConfirmed(int id)
+    {
+        var applicant = await _jobBoardDbContext.Applicants.FindAsync(id);
+        if (applicant == null)
+        {
+            return NotFound();
+        }
+
+        _jobBoardDbContext.Applicants.Remove(applicant);
+        await _jobBoardDbContext.SaveChangesAsync();
+
+        return RedirectToAction("ListAllApplicants", "Applicant");
+    }
+    public async Task<IActionResult> ApplicationStatus()
+    {
+        var user = await _userManager.GetUserAsync(User);
+
+        var applicant = await _jobBoardDbContext.Applicants
+            .Include(a => a.Job)
+            .FirstOrDefaultAsync(m => m.UserId == user!.Id);
+
+        if (applicant == null)
+        {
+            return NotFound();
+        }
+
+        if (applicant.Job == null)
+        {
+            return NotFound("No applied job found."); 
+        }
+
+        var appliedJob = new
+        {
+            ApplicantName = applicant.FullName,
+            Job = applicant.Job.JobName
+        };
+
+        return View(appliedJob);
     }
 }

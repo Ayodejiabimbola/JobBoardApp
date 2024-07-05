@@ -26,12 +26,24 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXBwbGljYW50XEFwcGxpY2FudERldGFpbC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/HP/Desktop/MyProjects/JobBoard/Views/Applicant/ApplicationStatus.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXBwbGljYW50XEFwcGxpY2F0aW9uU3RhdHVzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/HP/Desktop/MyProjects/JobBoard/Views/Applicant/DeleteApplicantDetail.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXBwbGljYW50XERlbGV0ZUFwcGxpY2FudERldGFpbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/HP/Desktop/MyProjects/JobBoard/Views/Applicant/EditApplicantDetail.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXBwbGljYW50XEVkaXRBcHBsaWNhbnREZXRhaWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/HP/Desktop/MyProjects/JobBoard/Views/Applicant/ListAllApplicants.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXBwbGljYW50XExpc3RBbGxBcHBsaWNhbnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/HP/Desktop/MyProjects/JobBoard/Views/Application/ApplicationSubmitted.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXBwbGljYXRpb25cQXBwbGljYXRpb25TdWJtaXR0ZWQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/HP/Desktop/MyProjects/JobBoard/Views/Auth/Login.cshtml]

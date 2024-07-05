@@ -9,6 +9,8 @@ public class Applicant : BaseEntity
     public DateTime DOB { get; set; }
     public Gender Gender { get; set; } = default!;
     public int StateId { get; set; }
+    public int JobId { get; set; }
+    public Job Job { get; set; } = default!;
     public string? CVPath { get; set; } 
     public string? CoverLetterPath { get; set; }
     public string UserId { get; internal set; } = default!;

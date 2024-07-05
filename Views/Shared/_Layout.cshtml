@@ -27,7 +27,20 @@
                         </li>
                     </ul>
                 </div>
-            </div>
+                <div id="auth-buttons">
+                    @if (!User.Identity.IsAuthenticated)
+                    {
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Auth" asp-action="Login">Login</a>
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Auth" asp-action="Register">Register</a>
+                    }
+                    else
+                    {
+                        <form asp-area="Identity" asp-page="/Auth/Logout" method="post" class="d-inline">
+                        <button type="submit">Logout (@User.Identity.Name)</button>
+                        </form>
+                    }
+                    </div>
+                </div>
         </nav>
     </header>
     <div class="container">

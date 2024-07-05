@@ -20,4 +20,5 @@ public class ApplicantDetailViewModel
     public Gender Gender { get; set; } = default!;
     public int StateId { get; internal set; }
     public List<SelectListItem> States { get; internal set; } = default!;
+    public int JobId { get; internal set; }
 }

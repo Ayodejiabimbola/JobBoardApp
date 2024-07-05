@@ -3,6 +3,7 @@ using System;
 using JobBoard.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JobBoard.Migrations
 {
     [DbContext(typeof(JobBoardDbContext))]
-    partial class JobBoardDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240705094717_NewMigration")]
+    partial class NewMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -40,6 +43,35 @@ namespace JobBoard.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Jobs");
+                });
+
+            modelBuilder.Entity("JobApplication", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("ApplicantId")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("ApplicantId1")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ApplicationStatus")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("JobId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicantId1");
+
+                    b.HasIndex("JobId");
+
+                    b.ToTable("JobApplications");
                 });
 
             modelBuilder.Entity("JobBoard.Data.Applicant", b =>
@@ -292,6 +324,25 @@ namespace JobBoard.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("States");
+                });
+
+            modelBuilder.Entity("JobApplication", b =>
+                {
+                    b.HasOne("JobBoard.Data.Applicant", "Applicant")
+                        .WithMany()
+                        .HasForeignKey("ApplicantId1")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Job", "Job")
+                        .WithMany()
+                        .HasForeignKey("JobId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Applicant");
+
+                    b.Navigation("Job");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

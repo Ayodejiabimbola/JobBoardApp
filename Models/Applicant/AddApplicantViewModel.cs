@@ -37,4 +37,8 @@ public class AddApplicantViewModel
     public IFormFile CoverLetter { get; set; } = default!;
     public string? CVPath { get; set; }
     public string? CoverLetterPath { get; set; }
+    [Display(Name = "Jobs")]
+    [Required(ErrorMessage = "Select job to apply for")]
+    public int JobId { get; set; }
+    public List<SelectListItem> Jobs { get; internal set; } = default!;
 }

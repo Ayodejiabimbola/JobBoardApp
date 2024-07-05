@@ -67,6 +67,17 @@
         <input type="file" asp-for="CoverLetterPath" class="form-control" />
         <span asp-validation-for="CoverLetterPath" class="text-danger"></span>
     </div>
+    <div class="mb-3">
+        <label asp-for="JobId" class="form-label"></label>
+        <select asp-for="JobId" class="form-control">
+            <option value="" selected hidden disabled>Select Job to apply for</option>
+            @foreach (var job in Model.Jobs)
+            {
+                <option value="@job.Value">@job.Text</option>
+            }
+        </select>
+        <span asp-validation-for="JobId" class="text-danger"></span>
+    </div>
     <div>
         <button type="submit" class="btn btn-success">Submit Details </button>
     </div>

@@ -46,7 +46,7 @@ public class AuthController(
                     var userDetails = await Helper.GetCurrentUserIdAsync(_httpContextAccessor, _userManager);
                     var applicant = await _jobBoardDbContext.Applicants.AnyAsync(x => x.UserId == userDetails.userId);
 
-                    var redirectResult = applicant ? RedirectToAction("ApplicantDetail", "Applicant") : RedirectToAction("AddApplicant", "Applicant");
+                    var redirectResult = applicant ? RedirectToAction("Index", "Home") : RedirectToAction("AddApplicant", "Applicant");
 
                     _notyfService.Success("Login succesful");
                     return redirectResult;
