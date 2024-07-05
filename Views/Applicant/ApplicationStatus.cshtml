@@ -1,14 +1,13 @@
-@model JobBoard.Models.Applicant.ApplicantDetailViewModel
+@model JobBoard.Models.Applicant.ApplicationStatusViewModel
 
 @{
-    if (Model == null)
-    {
-        <p>An error occurred while retrieving your applied job information.</p>
-    }
-    else
-    {
-        var data = (dynamic)Model;
-        <p>Hi @data.ApplicantName,</p>
-        <p>The job you applied for is: @data.Job</p>
-    }
+    ViewData["Title"] = "Job Application Status";
 }
+
+<h1>Job Application Status</h1>
+
+<div>
+    <p><strong>Full Name:</strong> @Model.FullName</p>
+    <p><strong>Job Applied For:</strong> @Model.JobName</p>
+</div>
+

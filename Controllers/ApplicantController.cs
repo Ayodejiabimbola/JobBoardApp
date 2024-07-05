@@ -233,7 +233,7 @@ public class ApplicantController(
 
         return RedirectToAction("ListAllApplicants", "Applicant");
     }
-    public async Task<IActionResult> ApplicationStatus()
+    public async Task<IActionResult> ApplicationStatus(ApplicationStatusViewModel model)
     {
         var user = await _userManager.GetUserAsync(User);
 
@@ -251,12 +251,11 @@ public class ApplicantController(
             return NotFound("No applied job found."); 
         }
 
-        var appliedJob = new
+        var appliedJob = new ApplicationStatusViewModel
         {
-            ApplicantName = applicant.FullName,
-            Job = applicant.Job.JobName
+            FullName = applicant.FullName,
+            JobName = applicant.Job.JobName
         };
-
         return View(appliedJob);
     }
 }
